@@ -1,3 +1,8 @@
+// Assignment No.: 5
+// Problem No.: 4 [Sequential_Unsigned_Comparator]
+// Semester No.: 5
+// Group No.: G036
+// Group Members: Yashica Patodia(19CS10067) and Shashvat Gupta(19CS30042)
 `timescale 1ns / 1ns
 `include "Sequential_Unsigned_Comparator.v"
 

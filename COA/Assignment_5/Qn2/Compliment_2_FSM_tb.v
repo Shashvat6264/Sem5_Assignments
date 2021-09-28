@@ -1,3 +1,8 @@
+// Assignment No.: 5
+// Problem No.: 3 [Multiple-of-three Detector FSM]
+// Semester No.: 5
+// Group No.: G036
+// Group Members: Yashica Patodia(19CS10067) and Shashvat Gupta(19CS30042)
 `timescale 1ns / 1ns
 `include "Compliment_2_FSM.v"
 

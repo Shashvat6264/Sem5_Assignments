@@ -1,7 +1,7 @@
-// Assignment No.: 4
+// Assignment No.: 5
 // Problem No.: 3 [Multiple-of-three Detector FSM]
 // Semester No.: 5
-// Group No.: G
+// Group No.: G036
 // Group Members: Yashica Patodia(19CS10067) and Shashvat Gupta(19CS30042)
 // Mealy machine for Multiple-of-three Detector
 `timescale 1ns / 1ps
