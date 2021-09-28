@@ -4,15 +4,15 @@
 // Group No.: G036
 // Group Members: Yashica Patodia(19CS10067) and Shashvat Gupta(19CS30042)
 //LFSR
-`include "mux.v"  //including the mux module
+`include "mux.v"  										//including the mux module
 module LFSR(clk,seed,sel,rst,out);
-	input clk,sel,rst;   //taking the input parameters
-	input [3:0] seed;  //seed is a 4 bit binary number
-	output reg [3:0] out;  //out is 4 bit binary number
-	reg [3:0] state;  //state  is 4 bit binary number
-	wire [3:0] w;  //w is 4 bit binary number
+	input clk,sel,rst;   								//taking the input parameters
+	input [3:0] seed;  									//seed is a 4 bit binary number
+	output reg [3:0] out;  								//out is 4 bit binary number
+	reg [3:0] state;  									//state is 4 bit binary number
+	wire [3:0] w;  										//w is 4 bit binary number
 
-	always @(posedge clk) begin  //Synchronous reset
+	always @(posedge clk) begin  						//Synchronous reset
 		if (rst) begin
 		  state <= 4'b0000;
 		  out <= 4'b0000;
@@ -24,8 +24,8 @@ module LFSR(clk,seed,sel,rst,out);
 	mux m3(state[3],seed[2],sel,w[2]);
 	mux m4(state[0]^state[1],seed[3],sel,w[3]);
 
-	always @(posedge clk) begin  //Synchronous circuit
-		state[0] = w[0];   //Initializing the four bits of state[i] and out[i]
+	always @(posedge clk) begin  						//Synchronous circuit
+		state[0] = w[0];   								//Assigning the four bits of state[i] and out[i]
 		state[1] = w[1];
 		state[2] = w[2];
 		state[3] = w[3];
