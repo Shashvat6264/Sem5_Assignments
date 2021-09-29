@@ -1,0 +1,12 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/shashvat/Desktop/Assign4_19CS10067 (1)/Assign4_19CS10067'
+bison -dy -v asgn4_19CS10067_19CS30042.y --report=solved 
+flex asgn4_19CS10067_19CS30042.l
+gcc -c lex.yy.c 
+gcc -c asgn4_19CS10067_19CS30042.c 
+bison -dy -v asgn4_19CS10067_19CS30042.y --report=solved 
+gcc -c y.tab.c
+gcc lex.yy.o y.tab.o asgn4_19CS10067_19CS30042.o -lfl 
+./a.out < asgn4_19CS10067_19CS30042_test.c > asgn4_19CS10067_19CS30042.txt
+make: Leaving directory '/home/shashvat/Desktop/Assign4_19CS10067 (1)/Assign4_19CS10067'
+ 
