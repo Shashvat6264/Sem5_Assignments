@@ -14,5 +14,4 @@ int main()
 
 	//Single line comment
 	int j = 2;
-	if (j == 2) printf("Correct");
 }
