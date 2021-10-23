@@ -1,29 +1,16 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
- 
 # GNU Make 4.2.1
- 
 # Built for x86_64-pc-linux-gnu
- 
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
- 
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
- 
 # This is free software: you are free to change and redistribute it.
- 
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
- 
-# Make data base, printed on Wed Sep 29 12:19:23 2021
- 
+# Make data base, printed on Sat Oct 23 21:25:38 2021
 
 # Variables
- 
 
- 
 # 'override' directive
- 
 GNUMAKEFLAGS := 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
@@ -46,7 +33,7 @@ VSCODE_LOG_NATIVE = false
 # environment
 IM_CONFIG_PHASE = 1
 # environment
-PLATFORMIO_IDE = 2.3.3
+PLATFORMIO_IDE = 2.3.4
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -56,17 +43,15 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/shashvat/Desktop/Assign4_19CS10067 (1)/Assign4_19CS10067
+CURDIR := /home/shashvat/Desktop/Compilers_Lab/Assignment_5/ass5_19CS10067_19CS30042
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/73
-# environment
-VTE_VERSION = 6003
+SNAP_DATA = /var/snap/code/78
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:35486
+JOURNAL_STREAM = 9:35942
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -86,17 +71,19 @@ USERNAME = shashvat
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=8734c3c31b588e2f900de1716129ebcf
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
+# environment
+_ = /snap/code/78/usr/share/code/code
 # environment
 MANAGERPID = 1552
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
-VSCODE_CWD = /home/shashvat/Desktop/Assign4_19CS10067 (1)/Assign4_19CS10067
+VSCODE_CWD = /home/shashvat
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/73/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/78/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -110,9 +97,9 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/shashvat/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/73
+SNAP = /snap/code/78
 # environment
-SNAP_VERSION = e7d7e9a9
+SNAP_VERSION = 6cba118a
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -122,19 +109,19 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=9deef240-9519-4e16-863c-abeb49df5a9a&iid=9deef240-9519-4e16-863c-abeb49df5a9a&sid=9deef240-9519-4e16-863c-abeb49df5a9a","uploadToServer":true}
 # environment
-INVOCATION_ID = bc33717e91d6451d92ed8712b2b7c674
+INVOCATION_ID = 2dd671ab4b864a4582bd967bebf0f48c
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/73/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/78/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
-LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+LS_COLORS = 
 # environment
 XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 165063
+GIO_LAUNCHED_DESKTOP_FILE_PID = 251883
 # automatic
 %F = $(notdir $%)
 # environment
@@ -144,7 +131,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-PWD = /home/shashvat/Desktop/Assign4_19CS10067 (1)/Assign4_19CS10067
+PWD = /home/shashvat/Desktop/Compilers_Lab/Assignment_5/ass5_19CS10067_19CS30042
 # default
 .LOADED := 
 # environment
@@ -162,7 +149,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/shashvat/.config/Code/CachedData/e7d7e9a9348e6a8cc8c03f877d39cb72e5dfb1ff
+VSCODE_CODE_CACHE_PATH = /home/shashvat/.config/Code/CachedData/6cba118ac49a1b88332f312a8f67186f7f3c1643
 # environment
 LOGNAME = shashvat
 # environment
@@ -186,9 +173,7 @@ MAKELEVEL := 0
 # environment
 SNAP_REAL_HOME = /home/shashvat
 # environment
-PLATFORMIO_PATH = /home/shashvat/.platformio/penv/bin:/home/shashvat/.platformio/penv:/home/shashvat/.platformio/python3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-# environment
-COLORTERM = truecolor
+PLATFORMIO_PATH = /home/shashvat/.platformio/python3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -196,21 +181,21 @@ MAKECMDGOALS := all
 # environment
 PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
-SNAP_USER_DATA = /home/shashvat/snap/code/73
+SNAP_USER_DATA = /home/shashvat/snap/code/78
 # environment
-SHLVL = 1
+SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-36494a22-b2fe-444c-9aca-daa2ad7ac837.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d51182c5-f4ef-47aa-929e-24a16640d21b.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = shashvat
 # environment
-SNAP_REVISION = 73
+SNAP_REVISION = 78
 # makefile
-.DEFAULT_GOAL := asgn4_19CS10067_19CS30042.txt
+.DEFAULT_GOAL := test
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # automatic
@@ -224,7 +209,7 @@ MAKE_COMMAND := make
 # environment
 LANGUAGE = en_IN:en
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-b2fc8f51-1.60.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-b2fc8f51-1.61.2-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -242,8 +227,6 @@ GDK_BACKEND = x11
 # automatic
 +F = $(notdir $+)
 # environment
-NO_AT_BRIDGE = 1
-# environment
 QT_ACCESSIBILITY = 1
 # default
 MAKEFILES := 
@@ -260,15 +243,9 @@ SNAP_NAME = code
 # environment
 LC_ALL = C
 # environment
-DBUS_STARTER_BUS_TYPE = session
-# environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
-# environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/85d8f11c_eab2_4b32_b8f8_9e46bf733ecb
 # automatic
 ^F = $(notdir $^)
-# environment
-GNOME_TERMINAL_SERVICE = :1.15751
 # default
 SUFFIXES := 
 # environment
@@ -286,35 +263,38 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-TERM = xterm-256color
-# environment
-VSCODE_PID = 165100
-# environment
-DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=8734c3c31b588e2f900de1716129ebcf
+VSCODE_PID = 251922
 # variable set hash-table stats:
-# Load=134/1024=13%, Rehash=0, Collisions=20/159=13%
+# Load=127/1024=12%, Rehash=0, Collisions=21/152=14%
 
 # Pattern-specific Variable Values
 
 # No pattern-specific variable values.
 
 # Directories
- 
 
- 
-# . (device 2049, inode 295223): 9 files, no impossibilities.
- 
+# . (device 2049, inode 917639): 16 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 16 files, no impossibilities in 1 directories.
 
 # Implicit Rules
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 
 # No implicit rules.
 
 # Files
 
+ass5_19CS10067_19CS30042.tab.c: ass5_19CS10067_19CS30042.y
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 54):
+	bison -dtv ass5_19CS10067_19CS30042.y -W
+
 # Not a target:
-asgn4_19CS10067_19CS30042_test.c:
+ass5_19CS10067_19CS30042_translator.h:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -326,56 +306,107 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
+ass5_19CS10067_19CS30042.tab.h: ass5_19CS10067_19CS30042.y
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 57):
+	bison -dtv ass5_19CS10067_19CS30042.y -W
+
 lex.yy.o: lex.yy.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 8):
-	gcc -c lex.yy.c 
+#  recipe to execute (from 'Makefile', line 45):
+	g++ -c lex.yy.c
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-09-29 12:19:11.869320997
+#  Last modified 2021-10-21 01:31:23.146130067
 #  File has been updated.
 #  Successfully updated.
 
-# Not a target:
-asgn4_19CS10067_19CS30042.c:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-a.out: lex.yy.o asgn4_19CS10067_19CS30042.o y.tab.o
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
-	gcc lex.yy.o y.tab.o asgn4_19CS10067_19CS30042.o -lfl 
-
-y.tab.o: y.tab.c
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 11):
-	gcc -c y.tab.c
-
-asgn4_19CS10067_19CS30042.txt: a.out asgn4_19CS10067_19CS30042_test.c
+test: a.out
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	./a.out < asgn4_19CS10067_19CS30042_test.c > asgn4_19CS10067_19CS30042.txt
+	
+	@echo "TRANSLATING TEST FILE 1 \n(2D ARRAYS and LOOPS)==>"
+	./a.out < ass5_19CS10067_19CS30042_test1.c > ass5_19CS10067_19CS30042_quads1.out
+	@echo "Test File 1 Successfully Translated !\n"
+	@echo "TRANSLATING TEST FILE 2 \n(TYPE CASTING AND POINTERS)==>"
+	./a.out < ass5_19CS10067_19CS30042_test2.c > ass5_19CS10067_19CS30042_quads2.out
+	@echo "Test File 2 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 3 \n(ARITHMETIC EXPRESSIONS AND NESTED BLOCKS)==>"
+	./a.out < ass5_19CS10067_19CS30042_test3.c > ass5_19CS10067_19CS30042_quads3.out
+	@echo "Test File 3 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 4 \n(FUNCTION CALL, TERNARY, IF-ELSE)==>"
+	./a.out < ass5_19CS10067_19CS30042_test4.c > ass5_19CS10067_19CS30042_quads4.out
+	@echo "Test File 4 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 5 \n(NESTED IF-ELSE)==>"
+	./a.out < ass5_19CS10067_19CS30042_test5.c > ass5_19CS10067_19CS30042_quads5.out
+	@echo "Test File 5 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 6 ==>"
+	./a.out < ass5_19CS10067_19CS30042_test6.c > ass5_19CS10067_19CS30042_quads6.out
+	@echo "Test File 6 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 7 \n(UNCONDITIONAL JUMP GOTO)==>"
+	./a.out < ass5_19CS10067_19CS30042_test7.c > ass5_19CS10067_19CS30042_quads7.out
+	@echo "Test File 7 Successfully Translated !\n"
+	
+	@echo "TRANSLATING TEST FILE 8 \n(NESTED FOR WHILE DO_WHILE BOOLEAN)==>"
+	./a.out < ass5_19CS10067_19CS30042_test8.c > ass5_19CS10067_19CS30042_quads8.out
+	@echo "Test File 8 Successfully Translated !\n"
+	@echo "\nALL TEST FILES SUCCESSFULLY TRANSLATED !!\n"
 
-lex.yy.c: asgn4_19CS10067_19CS30042.l y.tab.h
+# Not a target:
+ass5_19CS10067_19CS30042.l:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 17):
-	flex asgn4_19CS10067_19CS30042.l
+
+# Not a target:
+ass5_19CS10067_19CS30042.y:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+a.out: lex.yy.o ass5_19CS10067_19CS30042.tab.o ass5_19CS10067_19CS30042_translator.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 38):
+	g++ lex.yy.o ass5_19CS10067_19CS30042.tab.o ass5_19CS10067_19CS30042_translator.o -lfl
+
+ass5_19CS10067_19CS30042_translator.o: ass5_19CS10067_19CS30042_translator.cxx ass5_19CS10067_19CS30042_translator.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 41):
+	g++ -c ass5_19CS10067_19CS30042_translator.h
+	g++ -c ass5_19CS10067_19CS30042_translator.cxx
+
+lex.yy.c: ass5_19CS10067_19CS30042.l ass5_19CS10067_19CS30042.tab.h ass5_19CS10067_19CS30042_translator.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 51):
+	flex ass5_19CS10067_19CS30042.l
 
 # Not a target:
 .DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ass5_19CS10067_19CS30042_translator.cxx:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -384,56 +415,46 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 26):
-	rm a.out lex.yy.* y.output asgn4_19CS10067_19CS30042.o y.tab.*
+#  recipe to execute (from 'Makefile', line 60):
+	rm lex.yy.c\
+	   lex.yy.o\
+	   a.out\
+	   ass5_19CS10067_19CS30042.tab.c\
+	   ass5_19CS10067_19CS30042.tab.h\
+	   ass5_19CS10067_19CS30042.tab.o\
+	   ass5_19CS10067_19CS30042.output\
+	   ass5_19CS10067_19CS30042_translator.o\
+	   ass5_19CS10067_19CS30042_translator.h.gch\
+	   ass5_19CS10067_19CS30042_quads1.out\
+	   ass5_19CS10067_19CS30042_quads2.out\
+	   ass5_19CS10067_19CS30042_quads3.out\
+	   ass5_19CS10067_19CS30042_quads4.out\
+	   ass5_19CS10067_19CS30042_quads5.out\
+	   ass5_19CS10067_19CS30042_quads6.out\
+	   ass5_19CS10067_19CS30042_quads7.out\
+	   ass5_19CS10067_19CS30042_quads8.out
 
-y.tab.c: asgn4_19CS10067_19CS30042.y
+ass5_19CS10067_19CS30042.tab.o: ass5_19CS10067_19CS30042.tab.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 20):
-	bison -dy -v asgn4_19CS10067_19CS30042.y --report=solved 
-
-y.tab.h: asgn4_19CS10067_19CS30042.y
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 23):
-	bison -dy -v asgn4_19CS10067_19CS30042.y --report=solved 
-
-# Not a target:
-asgn4_19CS10067_19CS30042.l:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-asgn4_19CS10067_19CS30042.o: asgn4_19CS10067_19CS30042.c
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 14):
-	gcc -c asgn4_19CS10067_19CS30042.c 
-
-# Not a target:
-asgn4_19CS10067_19CS30042.y:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 48):
+	g++ -c ass5_19CS10067_19CS30042.tab.c
 
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/46=0%
+# Load=17/1024=2%, Rehash=0, Collisions=0/47=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 22 / storage = 306 B / avg = 13 B
-# current buf: size = 8162 B / used = 306 B / count = 22 / avg = 13 B
+# strcache buffers: 1 (0) / strings = 30 / storage = 639 B / avg = 21 B
+# current buf: size = 8162 B / used = 639 B / count = 30 / avg = 21 B
 
-# strcache performance: lookups = 48 / hit rate = 54%
+# strcache performance: lookups = 56 / hit rate = 46%
 # hash-table stats:
-# Load=22/8192=0%, Rehash=0, Collisions=1/48=2%
-# Finished Make data base on Wed Sep 29 12:19:23 2021
+# Load=30/8192=0%, Rehash=0, Collisions=1/56=2%
+# Finished Make data base on Sat Oct 23 21:25:38 2021
 
  
