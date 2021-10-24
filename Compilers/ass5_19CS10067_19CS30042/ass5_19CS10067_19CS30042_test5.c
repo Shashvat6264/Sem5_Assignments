@@ -5,15 +5,14 @@ int euclidGCD(int a, int b)
         return b; 
     return euclidGCD(b % a, a); 
 } 
-
 int main()  
 {  
     int a, b, g;
     int flag=2;
     if(flag==0)
     {
+        b=25;
     	a=100;
-    	b=25;
     }
     else
     {

@@ -1,12 +1,13 @@
 // declarations ( variables(int, float, char), 1D array, 2D array, functions) and arithmetic operations
 
 // global declarations
+char c;		
 float d = 2.3;
 int s, w[10];                            // 1D array declaration
-float z[2][2];                           // 2D array declaration
+float zz[2][2];                           // 2D array declaration
 int a = 4, *p, b;                        // pointer declaration
 void quotient(int i, float d);           // function declaration
-char c;		
+
 
 int fun(int a){
 	// nested blocks

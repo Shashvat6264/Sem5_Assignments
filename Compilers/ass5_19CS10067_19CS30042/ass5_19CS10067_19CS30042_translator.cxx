@@ -3,12 +3,9 @@
  *            Shashvat Gupta (19CS30042)
  * Desc     : Definition file for the translation statements
  */
-
 #include "ass5_19CS10067_19CS30042_translator.h"
 #include <bits/stdc++.h>
 using namespace std;
-
-
 // Global variables (Referance from the headers)                  
 quadArray Q;                                                                                       // Quad Array
 symtable *ST;                                                                                      // Points to current symbol table

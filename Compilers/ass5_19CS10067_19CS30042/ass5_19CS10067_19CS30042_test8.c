@@ -1,7 +1,6 @@
 int f(int a, int b){
     return a>>1 + b;
 }
-
 int fun(int x){
     f(x, x);
     {
@@ -13,11 +12,9 @@ int fun(int x){
         }
     }
 }
-
 int main(){
     int dp[10][10];
-    int x = 10, r;
-
+    int r,x = 10;
     for(int l=1;l<10;l++){
         for(int i=0;i<10;i++){                        // NESTED FOR
             for(int j=i+l;j<10;j++){

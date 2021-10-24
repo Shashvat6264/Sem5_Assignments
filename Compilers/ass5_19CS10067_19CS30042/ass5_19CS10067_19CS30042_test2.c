@@ -1,4 +1,9 @@
-// typecasting and pointers
+int division(float a, float b)
+{
+	int quotient;
+	quotient = a/b; // type casting float -> int
+	return quotient;
+}
 void swapTwoNumbers(int* a, int* b) //pointers
 {
 	int temp = *a;
@@ -6,17 +11,9 @@ void swapTwoNumbers(int* a, int* b) //pointers
 	*b = temp;
 	return;
 }
-
-int division(float a, float b)
-{
-	int quotient;
-	quotient = a/b; // type casting float -> int
-	return quotient;
-}
-
 int main()
 {
-	int q=0,r=0;
+	int r=0,q=0;
 	float x=2.5;
 	q = division(x,1.2);
 	r=10;
