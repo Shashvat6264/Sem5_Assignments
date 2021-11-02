@@ -1,37 +1,43 @@
+//This test file checks the library functions readInt,printStr,printInt
+
+int readInt(int *eP);
 int printStr(char *c);
 int printInt(int i);
-int readInt(int *eP);
 
-int main () {
-  printStr("\n    #######################################################\n    ##                                                   ##\n    ##      Print first N fibonacci numbers              ##\n    ##         CHECK FOR BINARY OP AND LOOP              ##\n    ##                                                   ##\n    #######################################################\n\n");
+int main()
+{
 
-
-  printStr("ENTER THE VALUE FOR N (<=45): ");
-  int i,ep;
-  i=readInt(&ep);
-  printStr("\nYOU ENTERED THE VALUE: ");
+  printStr("Enter the value of N less than 30: ");
+  int i, ep;
+  i = readInt(&ep);
+  printStr("\nEntered value was: ");
   printInt(i);
 
-  printStr("\n\nTHE FIRST ");
+  printStr("\n\nThe first  ");
   printInt(i);
-  printStr(" FIBONACCI NUMBERS ARE :\n\n        ");
+  printStr(" fibonacci numbers are :\n\n        ");
 
-  int j,a=0,b=1,c;
+  int a = 0, b = 1, c = 0;
+  int j;
 
-  if(i>0) printInt(a);
+  if (i > 0)
+    printInt(a);
   printStr(" ");
-  if(i>1) printInt(b);
+  if (i > 1)
+    printInt(b);
   printStr(" ");
 
-  for(j=2;j<i;j++){
-    c = a+b;
+  for (j = 2; j < i; j++)
+  {
+    c = a + b;
     printInt(c);
     printStr(" ");
     a = b;
     b = c;
 
-    int r=j/10;
-    if(r*10==j){
+    int r = j / 10;
+    if (r * 10 == j)
+    {
       printStr("\n        ");
     }
   }

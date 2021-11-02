@@ -1,16 +1,18 @@
-int printStr(char *c);
-int printInt(int i);
-int readInt(int *eP);
+//This test file checks the library functions printStr,readInt,printInt
 
-int main () {
-    int eP;
-    printStr("\n        #############################################################\n        ##                                                         ##\n        ##            PRINT LOWER TRIANGLE PATTERN                 ##\n        ##    CHECK FOR CONDITIONAL STATEMENT AND NESTED LOOP      ##\n        ##                                                         ##\n        #############################################################\n\n        \n");    
-    printStr("        ENTER SIZE OF THE TRIANGLE ");
+int printStr(char *ch);
+int printInt(int number);
+int readInt(int *ep);
 
-    int b,n,i,j;
+int main()
+{
+    int ep;
+    printStr("       Enter the size of triangle ");
+
+    int b, n, i, j;
     n = readInt(&ep);
 
-    for (i = 0; i < 2*n-1; i++)
+    for (i = 0; i < 2 * n - 1; i++)
     {
         printStr("\n        ");
         for (j = 0; j <= i; j++)
