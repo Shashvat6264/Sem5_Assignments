@@ -1,31 +1,22 @@
 /**
- * Authors  : Debajyoti Dasgupta (18CS30051) [debajyotidasgupta6@gmail.com]
- *            Siba Smarak Panigrahi (18CS10069) [sibasmarak.p@gmail.com]
- * Language : C++14
- * Desc     : Definations file for the functions of translation statements
- * Date     : 24.10.2020
- * Project  : TinyC
- * Course   : CS39003 Compilers Laboratory
- */
+* Authors  : Yashica Patodia (19CS10067)
+*            Shashvat Gupta (19CS30042) 
+* Desc     : Definations file for the functions of translation statements
+*/
 
 #include "ass6_19CS10067_19CS30042_translator.h"
 #include <sstream>
 using namespace std;
 
-//----------------------------------------------//
-//              global variables                //
-//          (Referance from the headers)        //
-//----------------------------------------------//
+// Global variables (Referance from the headers)        
 
 quadArray q;                                                                            // Quad Array
 string Type;                                                                            // Stores latest type
 symtable * table;                                                                       // Points to current symbol table
-sym * currentSymbol;                                                                    // points to current symbol
+sym * currentSymbol;                                                                    // Points to current symbol
 symtable * globalTable;                                                                 // Global Symbbol Table
 
-//-----------------------------------------------------------//
-//      Implementation of the Symbol Type Class functions    //
-//-----------------------------------------------------------//
+// Implementation of the Symbol Type Class functions
 
 symtype::symtype(string type, symtype *ptr, int width):
 	type(type),
@@ -33,56 +24,47 @@ symtype::symtype(string type, symtype *ptr, int width):
 	width(width) {};
 
 
-//--------------------------------------------------//
-//      Implementation of the quad functions        //
-//--------------------------------------------------//
+// Implementation of the quad functions
 
-//----------------Constrtuctors overloaded----------------------
-
-// --------- (string, string, string, string)
-
+// Construtuctors overloaded
 quad::quad(string result, string arg1, string op, string arg2):
 	result(result), arg1(arg1), arg2(arg2), op(op) {};                                  // Constructor
-
-// --------- (string, int, string, string)
 
 quad::quad(string result, int arg1, string op, string arg2):
 	result(result), arg2(arg2), op(op)                                                  // Constructor
 	{
-		stringstream strs;                                                              // create a string stream 
-		strs << arg1;                                                                   // convert int to string by sending it into string stream
-		string temp_str = strs.str();                                                   // store the string value
-		char *intStr = (char*) temp_str.c_str();                                        // convert the string stream to char array
-		string str = string(intStr);                                                    // get the value of the string
-		this->arg1 = str;                                                               // store the value in arg1
+		stringstream strs;                                                              // Create a string stream 
+		strs << arg1;                                                                   // Convert int to string by sending it into string stream
+		string temp_str = strs.str();                                                   // Store the string value
+		char *intStr = (char*) temp_str.c_str();                                        // Convert the string stream to char array
+		string str = string(intStr);                                                    // Get the value of the string
+		this->arg1 = str;                                                               // Store the value in arg1
 	}
-
-// --------- (string, float, string, string)
 
 quad::quad(string result, float arg1, string op, string arg2):
 	result(result), arg2(arg2), op(op)
 	{
 		std::ostringstream buff;                                                        // Create an output stream buffer of string
-		buff << arg1;                                                                   // convert float to string by passing it into string buffer
-		this->arg1 = buff.str();                                                        // store the value in arg1
+		buff << arg1;                                                                   // Convert float to string by passing it into string buffer
+		this->arg1 = buff.str();                                                        // Store the value in arg1
 	}
 
 
-//------------- Helper function to print the quads -----------------
+// Helper function to print the quads 
 void quad::print()
 {
 	
-    ///////////////////////////////////////
-    //         SHIFT OPERATORS           //
-    ///////////////////////////////////////
+    
+    // SHIFT OPERATORS
+    
 	
 	if (op == "LEFTOP") std::cout << result << " = " << arg1 << " << " << arg2;
 	else if (op == "RIGHTOP") std::cout << result << " = " << arg1 << " >> " << arg2;
 	else if (op == "EQUAL") std::cout << result << " = " << arg1;
 	
-    ///////////////////////////////////////
-    //          BINARY OPERATORS         //
-    ///////////////////////////////////////
+    
+    // BINARY OPERATORS
+    
 
 	else if (op == "ADD") std::cout << result << " = " << arg1 << " + " << arg2;
 	else if (op == "SUB") std::cout << result << " = " << arg1 << " - " << arg2;
@@ -92,9 +74,9 @@ void quad::print()
 	else if (op == "XOR") std::cout << result << " = " << arg1 << " ^ " << arg2;
 	else if (op == "INOR") std::cout << result << " = " << arg1 << " | " << arg2;
 	else if (op == "BAND") std::cout << result << " = " << arg1 << " &" << arg2;
-    ///////////////////////////////////////
-    //         UNARY OPERATORS           //
-    ///////////////////////////////////////
+    
+    // UNARY OPERATORS
+    
 
 	else if (op == "ADDRESS") std::cout << result << " = &" << arg1;
 	else if (op == "PTRR") std::cout << result << " = *" << arg1;
@@ -103,9 +85,9 @@ void quad::print()
 	else if (op == "BNOT") std::cout << result << " = ~" << arg1;
 	else if (op == "LNOT") std::cout << result << " = !" << arg1;
     
-	///////////////////////////////////////
-    //       RELATIONAL OPERATORS        //
-    ///////////////////////////////////////
+	
+    // RELATIONAL OPERATORS
+    
 	
 	else if (op == "EQOP") std::cout << "if " << arg1 << " == " << arg2 << " goto " << result;
 	else if (op == "NEOP") std::cout << "if " << arg1 << " != " << arg2 << " goto " << result;
@@ -115,9 +97,9 @@ void quad::print()
 	else if (op == "LE") std::cout << "if " << arg1 << " <= " << arg2 << " goto " << result;
 	else if (op == "GOTOOP") std::cout << "goto " << result;
 
-    ///////////////////////////////////////
-    //         OTHER OPERATORS           //
-    ///////////////////////////////////////
+    
+    // OTHER OPERATORS
+    
 
 	else if (op == "ARRR") std::cout << result << " = " << arg1 << "[" << arg2 << "]";
 	else if (op == "ARRL") std::cout << result << "[" << arg1 << "]" << " = " << arg2;
@@ -130,11 +112,9 @@ void quad::print()
 	std::cout << endl;
 }
 
-//--------------------------------------------------------------//
-//        Implementation of the Quad Array Class functions      //
-//--------------------------------------------------------------//
+// Implementation of the Quad Array Class functions
 
-//------------------Print the elements of the Quad Array--------------------
+// Print the elements of the Quad Array
 void quadArray::print()
 {
 	std::cout << setw(30) << setfill('=') << "=" << endl;
@@ -253,18 +233,16 @@ sym *symtable::lookup(string name)
 		if (it->name == name) return &*it;;
 	}
 
-	// ----------- new symbol to be added to table ---------------
+	// New symbol to be added to table
 	s = new sym(name);
 	s->category = "local";
 	table.push_back(*s);
 	return &table.back();
 }
 
-//------------------------------------------------------------------//
-//          Overloaded emit function used by the parser             //
-//------------------------------------------------------------------//
+// Overloaded emit function used by the parser
 
-//----------------- Emit a three address code TAC and add it to the Quad Array ------------
+// Emit a three address code TAC and add it to the Quad Array
 
 void emit(string op, string result, string arg1, string arg2)
 {
@@ -359,43 +337,39 @@ bool typecheck(symtype *t1, symtype *t2)
 	return true;
 }
 
-//-------------------------------------------------------------//
-//            Backpatching and related functions               //
-//-------------------------------------------------------------//
+// Backpatching and related functions
 
 void backpatch(list<int> l, int addr)
 {
 	stringstream strs;
 	strs << addr;
 	string temp_str = strs.str();
-	char *intStr = (char*) temp_str.c_str();                                                    // convert std::string stream to char array
-	string str = string(intStr);                                                                // create a string stream of the integer address
-	for (list<int>::iterator it = l.begin(); it != l.end(); it++)                               // iterate through all the dangline quads
-	{                                                                                           // backpatch the statement with the current address
+	char *intStr = (char*) temp_str.c_str();                                                    // Convert std::string stream to char array
+	string str = string(intStr);                                                                // Create a string stream of the integer address
+	for (list<int>::iterator it = l.begin(); it != l.end(); it++)                               // Iterate through all the dangline quads
+	{                                                                                           // Backpatch the statement with the current address
 		q.Array[*it].result = str;
 	}
 }
 
 list<int> makelist(int i)
 {
-	list<int> l(1, i);                                                                           // make a list with the currrent address
-	return l;                                                                                    // return the list
+	list<int> l(1, i);                                                                           // Make a list with the currrent address
+	return l;                                                                                    // Return the list
 }
 
 list<int> merge(list<int> &a, list<int> &b)
 {
-	a.merge(b);                                                                                   // merge the list b into list a
-	return a;                                                                                     // return the merged list
+	a.merge(b);                                                                                   // Merge the list b into list a
+	return a;                                                                                     // Return the merged list
 }
 
 
-//----------------------------------------------------------------------//
-//          Other helper functions required for TAC generation          //
-//----------------------------------------------------------------------//
+// Other helper functions required for TAC generation
 
-//------------- Type checking and Type conversion functions -------------
+// Type checking and Type conversion functions
 
-expr* convertInt2Bool(expr *e)                                                                     // convert an input expression into boolewan expression
+expr* convertInt2Bool(expr *e)                                                                     // Convert an input expression into boolewan expression
 {
 	// Convert any expression to bool
 	if (e->type != "BOOL")                                                                         // Do the conversion only if the type is not already bool
@@ -475,9 +449,7 @@ sym* gentemp(symtype *t, string init)
 }
 
 
-//----------------------------------------------------------------------//
-//           Other helper function for debugging and printing           //
-//----------------------------------------------------------------------//
+// Other helper function for debugging and printing
 
 int size_type(symtype *t)
 {

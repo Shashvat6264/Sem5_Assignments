@@ -1,12 +1,8 @@
 %{
 	/**
-	* Authors  : Debajyoti Dasgupta (18CS30051) [debajyotidasgupta6@gmail.com]
-	*            Siba Smarak Panigrahi (18CS10069) [sibasmarak.p@gmail.com]
-	* Language : C++14
-	* Desc     : header file for the translation statements
-	* Date     : 24.10.2020
-	* Project  : TinyC
-	* Course   : CS39003 Compilers Laboratory
+	* Authors  : Yashica Patodia (19CS10067)
+	*            Shashvat Gupta (19CS30042) 
+	* Desc     : Lux file
 	*/
 
 	#include <stdio.h>
@@ -17,12 +13,11 @@
     extern int line;
     int line = 1;
 %}
-/*Definition of regular expression*/
 
 %option noyywrap
 
-
 /* Regular Expression Definations */
+
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
 NON_ZERO        [1-9]
@@ -48,8 +43,8 @@ NEWLINE         [\n]
 
 %%
 
-{COMMENT_LINE}          { /*printf("This single line comment will be ignored by the parser\n");*/ }
-{COMMENT_MULTI}         { /*printf("This multi line comment will be ignored by the parser\n");*/  }
+{COMMENT_LINE}          { /* Single line comment will be ignored by the parser */ }
+{COMMENT_MULTI}         { /* Multi line comment will be ignored by the parser */  }
 
 "if"                    { return IF;       }
 "do"                    { return DO;       }
@@ -155,8 +150,8 @@ NEWLINE         [\n]
 							return STRING_LITERAL; /* String-literal */ 
 						}
 
-{WS}                    { /*White-space Rule*/ }
+{WS}                    { /* White-space Rule */ }
 
-{NEWLINE}               { /* printf("\n\n============================== Parsing line %d ============================== \n\n", ++line ); */ }
+{NEWLINE}               { /* New Line Rule */ }
 
 %%

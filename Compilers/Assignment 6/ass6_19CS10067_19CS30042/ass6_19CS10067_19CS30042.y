@@ -1,31 +1,38 @@
 %{
-#include <iostream>
-#include <cstdlib>
-#include <string>
-#include <stdio.h>
-#include <sstream>
-#include "ass6_19CS10067_19CS30042_translator.h"
+	/**
+	* Authors  : Yashica Patodia (19CS10067)
+	*            Shashvat Gupta (19CS30042) 
+	* Desc     : Yac file
+	*/
 
-extern int yylex();
-void yyerror(string s);
-extern string Type;
-vector <string> allstrings;
+	#include <iostream>
+	#include <cstdlib>
+	#include <string>
+	#include <stdio.h>
+	#include <sstream>
+	#include "ass6_19CS10067_19CS30042_translator.h"
 
-using namespace std;
+	extern int yylex();
+	void yyerror(string s);
+	extern string Type;
+	vector <string> allstrings;
+
+	using namespace std;
 %}
 
 
 %union {
-  int intval;
-  char* charval;
-  int instr;
-  sym* symp;
-  symtype* symtp;
-  expr* E;
-  statement* S;
-  Array* A;
-  char unaryOperator;
+	int intval;
+	char* charval;
+	int instr;
+	sym* symp;
+	symtype* symtp;
+	expr* E;
+	statement* S;
+	Array* A;
+	char unaryOperator;
 } 
+
 %token AUTO
 %token ENUM
 %token RESTRICT
@@ -117,10 +124,10 @@ using namespace std;
 %token HASH
 
 %start translation_unit
-//to remove dangling else problem
+// To remove the dangling else problem
 %right THEN ELSE
 
-//Expressions
+// Expressions
 %type <E>
 	expression
 	primary_expression 
@@ -140,7 +147,7 @@ using namespace std;
 
 %type <intval> argument_expression_list
 
-//Array to be used later
+// Array to be used later
 %type <A> postfix_expression
 	unary_expression
 	cast_expression
@@ -150,12 +157,12 @@ using namespace std;
 %type <symp> direct_declarator init_declarator declarator
 %type <symtp> pointer
 
-//Auxillary non terminals M and N
+// Auxillary non terminals M and N
 %type <instr> M
 %type <S> N
 
 
-//Statements
+// Statements
 %type <S>  statement
 	labeled_statement 
 	compound_statement
@@ -168,21 +175,21 @@ using namespace std;
 %%
 
 primary_expression: 
-	IDENTIFIER 								// identifier
+	IDENTIFIER 								// Identifier
 	{
-		$$ = new expr();					//create new expression and store pointer to ST entry in the location
+		$$ = new expr();					// Create a new expression and store pointer to ST entry in the location
 		$$->loc = $1;
 		$$->type = "NONBOOL";
 	}
 	| constant 								
 	{
-		//create new expression and store the value of the constant in a temporary
+		// Create a new expression and store the value of the constant in a temporary
 		$$ = new expr();
 		$$->loc = $1;
 	}
 	| STRING_LITERAL 
 	{
-		//create new expression and store the value of the constant in a temporary
+		// Create a new expression and store the value of the constant in a temporary
 		$$ = new expr();
 		symtype* tmp = new symtype("PTR");
 		$$->loc = gentemp(tmp, $1);
@@ -198,7 +205,7 @@ primary_expression:
 	}
 	| ROBRAOPEN expression ROBRACLOSE 
 	{
-		//simply equal to expression
+		// Simply equal to expression
 		$$ = $2;
 	}
 	;
@@ -219,8 +226,7 @@ constant:
 		$$ = gentemp(new symtype("DOUBLE"), string($1));
 		emit("EQUAL", $$->name, string($1));
 	}
-	|ENUMERATION_CONSTANT  {//later
-	}
+	|ENUMERATION_CONSTANT  {}
 	|CHARACTER_CONSTANT 
 	{
 		$$ = gentemp(new symtype("CHAR"),$1);
@@ -232,7 +238,7 @@ constant:
 postfix_expression:
 	primary_expression 
 	{
-		//create new Array and store the location of primary expression in it
+		// Create new Array and store the location of primary expression in it
 		$$ = new Array ();
 		$$->Array = $1->loc;
 		$$->loc = $$->Array;
@@ -242,26 +248,26 @@ postfix_expression:
 	{
 		$$ = new Array();
 		
-		$$->Array = $1->loc;							// copy the base
-		$$->type = $1->type->ptr;						// type = type of element
-		$$->loc = gentemp(new symtype("INTEGER"));		// store computed address
+		$$->Array = $1->loc;							// Copy the base
+		$$->type = $1->type->ptr;						// Type = type of element
+		$$->loc = gentemp(new symtype("INTEGER"));		// Store computed address
 		
-		// New address =(if only) already computed + $3 * new width
+		// New address = (if only) already computed + $3 * new width
 		if ($1->cat=="ARR") 
 		{						
-			// if already arr, multiply the size of the sub-type of Array with the expression value and add
+			// If already arr, multiply the size of the sub-type of Array with the expression value and add
 			sym* t = gentemp(new symtype("INTEGER"));
 			stringstream strs;
 		    strs <<size_type($$->type);
 		    string temp_str = strs.str();
 		    char* intStr = (char*) temp_str.c_str();
 			string str = string(intStr);				
- 			emit ("MULT", t->name, $3->loc->name, str);
-			emit ("ADD", $$->loc->name, $1->loc->name, t->name);
+ 			emit("MULT", t->name, $3->loc->name, str);
+			emit("ADD", $$->loc->name, $1->loc->name, t->name);
 		}
  		else 
 		{
-			//if a 1D Array, simply calculate size
+			// If a 1D Array, simply calculate size
  			stringstream strs;
 		    strs <<size_type($$->type);
 		    string temp_str = strs.str();
@@ -273,12 +279,10 @@ postfix_expression:
  		// Mark that it contains Array address and first time computation is done
 		$$->cat = "ARR";
 	}
-	|postfix_expression ROBRAOPEN ROBRACLOSE {
-	//later
-	}
+	|postfix_expression ROBRAOPEN ROBRACLOSE {}
 	|postfix_expression ROBRAOPEN argument_expression_list ROBRACLOSE 
 	{
-		//call the function with number of parameters from argument_expression_list_opt
+		// Call the function with number of parameters from argument_expression_list_opt
 		$$ = new Array();
 		$$->Array = gentemp($1->type);
 		stringstream strs;
@@ -288,44 +292,42 @@ postfix_expression:
 		string str = string(intStr);		
 		emit("CALL", $$->Array->name, $1->Array->name, str);
 	}
-	|postfix_expression DOT IDENTIFIER {//later
-	}
-	|postfix_expression ACC IDENTIFIER {//later
-	}
+	|postfix_expression DOT IDENTIFIER {}
+	|postfix_expression ACC IDENTIFIER {}
 	|postfix_expression INC 
 	{
-		//generate new temporary, equate it to old one and then add 1
+		// Generate new temporary, equate it to old one and then add 1
 		$$ = new Array();
 
-		// copy $1 to $$
+		// Copy $1 to $$
 		$$->Array = gentemp($1->Array->type);
-		emit ("EQUAL", $$->Array->name, $1->Array->name);
+		emit("EQUAL", $$->Array->name, $1->Array->name);
 
 		// Increment $1
-		emit ("ADD", $1->Array->name, $1->Array->name, "1");
+		emit("ADD", $1->Array->name, $1->Array->name, "1");
 	}
 	|postfix_expression DEC 
 	{
-		//generate new temporary, equate it to old one and then subtract 1
+		// Generate new temporary, equate it to old one and then subtract 1
 		$$ = new Array();
 
-		// copy $1 to $$
+		// Copy $1 to $$
 		$$->Array = gentemp($1->Array->type);
-		emit ("EQUAL", $$->Array->name, $1->Array->name);
+		emit("EQUAL", $$->Array->name, $1->Array->name);
 
 		// Decrement $1
-		emit ("SUB", $1->Array->name, $1->Array->name, "1");
+		emit("SUB", $1->Array->name, $1->Array->name, "1");
 	}
 	|ROBRAOPEN type_name ROBRACLOSE CURBRAOPEN initializer_list CURBRACLOSE 
 	{
-		//later to be added more
+		// Later to be added more
 		$$ = new Array();
 		$$->Array = gentemp(new symtype("INTEGER"));
 		$$->loc = gentemp(new symtype("INTEGER"));
 	}
 	|ROBRAOPEN type_name ROBRACLOSE CURBRAOPEN initializer_list COMMA CURBRACLOSE 
 	{
-		//later to be added more
+		// Later to be added more
 		$$ = new Array();
 		$$->Array = gentemp(new symtype("INTEGER"));
 		$$->loc = gentemp(new symtype("INTEGER"));
@@ -335,14 +337,14 @@ postfix_expression:
 argument_expression_list:
 	assignment_expression 
 	{
-		//one argument and emit param
-		emit ("PARAM", $1->loc->name);
+		// One argument and emitparam
+		emit("PARAM", $1->loc->name);
 		$$ = 1;
 	}
 	|argument_expression_list COMMA assignment_expression 
 	{
-		//one more argument and emit param
-		emit ("PARAM", $3->loc->name);
+		// One more argument and emitparam
+		emit("PARAM", $3->loc->name);
 		$$ = $1+1;
 	}
 	;
@@ -350,13 +352,13 @@ argument_expression_list:
 unary_expression:
 	postfix_expression 
 	{
-		//simply equate
+		// Simply equate
 		$$ = $1;
 	}
 	|INC unary_expression 
 	{
 		// Increment $2
-		emit ("ADD", $2->Array->name, $2->Array->name, "1");
+		emit("ADD", $2->Array->name, $2->Array->name, "1");
 
 		// Use the same value as $2
 		$$ = $2;
@@ -364,64 +366,60 @@ unary_expression:
 	|DEC unary_expression 
 	{
 		// Decrement $2
-		emit ("SUB", $2->Array->name, $2->Array->name, "1");
+		emit("SUB", $2->Array->name, $2->Array->name, "1");
 
 		// Use the same value as $2
 		$$ = $2;
 	}
 	|unary_operator cast_expression 
 	{
-		//if it is of this type, where unary operator is involved{
+		// If it is of this type, where unary operator is involved{
 		$$ = new Array();
 		switch ($1) {
 			case '&':
-				//address of something, then generate a pointer temporary and emit the quad
+				// Address of something, then generate a pointer temporary and emitthe quad
 				$$->Array = gentemp((new symtype("PTR")));
 				$$->Array->type->ptr = $2->Array->type; 
-				emit ("ADDRESS", $$->Array->name, $2->Array->name);
+				emit("ADDRESS", $$->Array->name, $2->Array->name);
 				break;
 			case '*':
-				//value of something, then generate a temporary of the corresponding type and emit the quad
+				// Value of something, then generate a temporary of the corresponding type and emitthe quad
 				$$->cat = "PTR";
-				$$->loc = gentemp ($2->Array->type->ptr);
-				emit ("PTRR", $$->loc->name, $2->Array->name);
+				$$->loc = gentemp($2->Array->type->ptr);
+				emit("PTRR", $$->loc->name, $2->Array->name);
 				$$->Array = $2->Array;
 				break;
 			case '+':
-				// unary plus
+				// Unary plus
 				$$ = $2;
 				break;
 			case '-':
-				// unary minus 
+				// Unary minus 
 				$$->Array = gentemp(new symtype($2->Array->type->type));
-				emit ("UMINUS", $$->Array->name, $2->Array->name);
+				emit("UMINUS", $$->Array->name, $2->Array->name);
 				break;
 			case '~':
-				//bitwise not, generate new temporary of the same base type and make it negative of current one
+				// Bitwise not, generate new temporary of the same base type and make it negative of current one
 				$$->Array = gentemp(new symtype($2->Array->type->type));
-				emit ("BNOT", $$->Array->name, $2->Array->name);
+				emit("BNOT", $$->Array->name, $2->Array->name);
 				break;
 			case '!':
-				//logical not, generate new temporary of the same base type and make it negative of current one
+				// Logical not, generate new temporary of the same base type and make it negative of current one
 				$$->Array = gentemp(new symtype($2->Array->type->type));
-				emit ("LNOT", $$->Array->name, $2->Array->name);
+				emit("LNOT", $$->Array->name, $2->Array->name);
 				break;
 			default:
 				break;
 		}
 	}
-	|SIZEOF unary_expression {
-	//later
-	}
-	|SIZEOF ROBRAOPEN type_name ROBRACLOSE {
-	//later
-	}
+	|SIZEOF unary_expression {}
+	|SIZEOF ROBRAOPEN type_name ROBRACLOSE {}
 	;
 
 unary_operator:
 	AMP 
 	{
-		//simply equate to the corresponding operator
+		// Simply equate to the corresponding operator
 		$$ = '&';
 	}
 	|MUL 
@@ -449,12 +447,12 @@ unary_operator:
 cast_expression:
 	unary_expression 
 	{
-		//unary expression, simply equate
+		// Unary expression, simply equate
 		$$=$1;
 	}
 	|ROBRAOPEN type_name ROBRACLOSE cast_expression 
 	{
-		//simply equate
+		// Simply equate
 		$$=$4;
 	}
 	;
@@ -462,375 +460,369 @@ cast_expression:
 multiplicative_expression:
 	cast_expression 
 	{
-		$$ = new expr();		//generate new expression
+		$$ = new expr();		// Generate new expression
 		if ($1->cat=="ARR") 
 		{ 
 			// Array
 			$$->loc = gentemp($1->loc->type);
-			emit("ARRR", $$->loc->name, $1->Array->name, $1->loc->name);		
-			//emit with Array right
+			emit("ARR", $$->loc->name, $1->Array->name, $1->loc->name);		
+			// Emitwith Array right
 		}
 		else if ($1->cat=="PTR") 
 		{ 
-			//if it is of type ptr
+			// If it is of type ptr
 			$$->loc = $1->loc;
 		}
 		else 
 		{ 
-			// otherwise
+			// Otherwise
 			$$->loc = $1->Array;
 		}
 	}
 	|multiplicative_expression MUL cast_expression 
 	{
-		//if we have multiplication
+		// If we have multiplication
 		if (typecheck ($1->loc, $3->Array) ) 
 		{
-			//if types are compatible, generate new temporary and equate to the product
+			// If types are compatible, generate new temporary and equate to the product
 			$$ = new expr();
 			$$->loc = gentemp(new symtype($1->loc->type->type));
-			emit ("MULT", $$->loc->name, $1->loc->name, $3->Array->name);
+			emit("MULT", $$->loc->name, $1->loc->name, $3->Array->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|multiplicative_expression DIV cast_expression 
 	{
-		//if we have division
+		// If we have division
 		if (typecheck ($1->loc, $3->Array) ) 
 		{
-			//if types are compatible, generate new temporary and equate to the quotient
+			// If types are compatible, generate new temporary and equate to the quotient
 			$$ = new expr();
 			$$->loc = gentemp(new symtype($1->loc->type->type));
-			emit ("DIVIDE", $$->loc->name, $1->loc->name, $3->Array->name);
+			emit("DIVIDE", $$->loc->name, $1->loc->name, $3->Array->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|multiplicative_expression MODULO cast_expression 
 	{
-		//if we have mod
+		// If we have mod
 		if (typecheck ($1->loc, $3->Array) ) 
 		{
-			//if types are compatible, generate new temporary and equate to the quotient
+			// If types are compatible, generate new temporary and equate to the quotient
 			$$ = new expr();
 			$$->loc = gentemp(new symtype($1->loc->type->type));
-			emit ("MODOP", $$->loc->name, $1->loc->name, $3->Array->name);
+			emit("MODOP", $$->loc->name, $1->loc->name, $3->Array->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 additive_expression:
 	multiplicative_expression 
 	{
-		//simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|additive_expression ADD multiplicative_expression 
 	{	
-		// for addition
+		// For addition
 		if (typecheck ($1->loc, $3->loc) ) 
 		{
-			//if types are compatible, generate new temporary and equate to the sum
+			// If types are compatible, generate new temporary and equate to the sum
 			$$ = new expr();
 			$$->loc = gentemp(new symtype($1->loc->type->type));
-			emit ("ADD", $$->loc->name, $1->loc->name, $3->loc->name);
+			emit("ADD", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|additive_expression SUB multiplicative_expression 
 	{
-		// for subtraction
-		if (typecheck ($1->loc, $3->loc) ) 
+		// For subtraction
+		if (typecheck($1->loc, $3->loc)) 
 		{
-			// if types are compatible, generate new temporary and equate to the difference
+			// If types are compatible, generate new temporary and equate to the difference
 			$$ = new expr();
 			$$->loc = gentemp(new symtype($1->loc->type->type));
-			emit ("SUB", $$->loc->name, $1->loc->name, $3->loc->name);
+			emit("SUB", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		//error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 shift_expression:
 	additive_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|shift_expression SHL additive_expression 
 	{
-		// if base type is int, generate new temporary and equate to the shifted value
+		// If base type is int, generate new temporary and equate to the shifted value
 		if ($3->loc->type->type == "INTEGER") 
 		{
 			$$ = new expr();
-			$$->loc = gentemp (new symtype("INTEGER"));
-			emit ("LEFTOP", $$->loc->name, $1->loc->name, $3->loc->name);
+			$$->loc = gentemp(new symtype("INTEGER"));
+			emit("LEFTOP", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|shift_expression SHR additive_expression
 	{
-		// if base type is int, generate new temporary and equate to the shifted value
+		// If base type is int, generate new temporary and equate to the shifted value
 		if ($3->loc->type->type == "INTEGER") 
 		{
 			$$ = new expr();
-			$$->loc = gentemp (new symtype("INTEGER"));
-			emit ("RIGHTOP", $$->loc->name, $1->loc->name, $3->loc->name);
+			$$->loc = gentemp(new symtype("INTEGER"));
+			emit("RIGHTOP", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 relational_expression:
 	shift_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}	
 	|relational_expression BITSHL shift_expression 
 	{
-		// check compatible types
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatible types
+		if (typecheck($1->loc, $3->loc)) 
 		{
 			$$ = new expr();
 			$$->type = "BOOL";
 
-			$$->truelist = makelist (nextinstr());					// make truelist
-			$$->falselist = makelist (nextinstr()+1);				// make falselist
-			emit("LT", "", $1->loc->name, $3->loc->name);			// emit statement if a < b goto ...
-			emit ("GOTOOP", "");									// emit goto ...
+			$$->truelist = makelist (nextinstr());					// Make truelist
+			$$->falselist = makelist (nextinstr()+1);				// Make falselist
+			emit("LT", "", $1->loc->name, $3->loc->name);			// Emitstatement if a < b goto ...
+			emit("GOTOOP", "");										// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|relational_expression BITSHR shift_expression 
 	{
-		// check compatible types
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatible types
+		if (typecheck($1->loc, $3->loc)) 
 		{
 			$$ = new expr();
 			$$->type = "BOOL";
-
-			$$->truelist = makelist (nextinstr());					// make truelist
-			$$->falselist = makelist (nextinstr()+1);				// make falselist
-			emit("GT", "", $1->loc->name, $3->loc->name);			// emit statement if a > b goto ...
-			emit ("GOTOOP", "");									// emit goto ...
+			$$->truelist = makelist(nextinstr());					// Make truelist
+			$$->falselist = makelist(nextinstr()+1);				// Make falselist
+			emit("GT", "", $1->loc->name, $3->loc->name);			// Emitstatement if a > b goto ...
+			emit("GOTOOP", "");										// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|relational_expression LTE shift_expression 
 	{
-		// check compatible types, make truelist and falselist, emit the required statement
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatible types, make truelist and falselist, emitthe required statement
+		if (typecheck($1->loc, $3->loc)) 
 		{
 			$$ = new expr();
 			$$->type = "BOOL";
-
-			$$->truelist = makelist (nextinstr());
-			$$->falselist = makelist (nextinstr()+1);
-			emit("LE", "", $1->loc->name, $3->loc->name);
-			emit ("GOTOOP", "");
+			$$->truelist = makelist(nextinstr());					// Make truelist
+			$$->falselist = makelist(nextinstr()+1);				// Make falselist
+			emit("LE", "", $1->loc->name, $3->loc->name);			// Emitstatement if a > b goto ...
+			emit("GOTOOP", "");										// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|relational_expression GTE shift_expression 
 	{
-		// check compatible types, make truelist and falselist, emit the required statement
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatible types, make truelist and falselist, emitthe required statement
+		if (typecheck($1->loc, $3->loc)) 
 		{
 			$$ = new expr();
 			$$->type = "BOOL";
-
-			$$->truelist = makelist (nextinstr());
-			$$->falselist = makelist (nextinstr()+1);
-			emit("GE", "", $1->loc->name, $3->loc->name);
-			emit ("GOTOOP", "");
+			$$->truelist = makelist(nextinstr());					// Make truelist
+			$$->falselist = makelist(nextinstr()+1);				// Make falselist
+			emit("GE", "", $1->loc->name, $3->loc->name);			// Emitstatement if a > b goto ...
+			emit("GOTOOP", "");										// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 equality_expression:
 	relational_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|equality_expression EQ relational_expression 
 	{
-		// check compatibility, make list and emit
-		if (typecheck ($1->loc, $3->loc))         
+		// Check compatibility, make list and emit
+		if (typecheck($1->loc, $3->loc))         
 		{
-			// convert bool to int
-			convertBool2Int ($1);			
-			convertBool2Int ($3);
+			// Convert bool to int
+			convertBool2Int($1);			
+			convertBool2Int($3);
 
 			$$ = new expr();
 			$$->type = "BOOL";
-
-			$$->truelist = makelist (nextinstr());
-			$$->falselist = makelist (nextinstr()+1);
-			emit("EQOP", "", $1->loc->name, $3->loc->name);
-			emit ("GOTOOP", "");
+			$$->truelist = makelist(nextinstr());					// Make truelist
+			$$->falselist = makelist(nextinstr()+1);				// Make falselist
+			emit("EQOP", "", $1->loc->name, $3->loc->name);			// Emitstatement if a > b goto ...
+			emit("GOTOOP", "");									// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	|equality_expression NEQ relational_expression 
 	{
-		// check compatibility, convert bool to int, make list and emit
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatibility, convert bool to int, make list and emit
+		if (typecheck($1->loc, $3->loc)) 
 		{
-			convertBool2Int ($1);
-			convertBool2Int ($3);
+			convertBool2Int($1);
+			convertBool2Int($3);
 
 			$$ = new expr();
 			$$->type = "BOOL";
-
-			$$->truelist = makelist (nextinstr());
-			$$->falselist = makelist (nextinstr()+1);
-			emit("NEOP", "", $1->loc->name, $3->loc->name);
-			emit ("GOTOOP", "");
+			$$->truelist = makelist(nextinstr());					// Make truelist
+			$$->falselist = makelist(nextinstr()+1);				// Make falselist
+			emit("NEOP", "", $1->loc->name, $3->loc->name);			// Emitstatement if a > b goto ...
+			emit("GOTOOP", "");										// Emitgoto ...
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 AND_expression:
 	equality_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|AND_expression AMP equality_expression 
 	{
-		// check compatible types, make non-boolean expression and convert bool to int and emit
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Check compatible types, make non-boolean expression and convert bool to int and emit
+		if (typecheck($1->loc, $3->loc)) 
 		{
-			// convert bool to int
-			convertBool2Int ($1);
-			convertBool2Int ($3);
+			// Convert bool to int
+			convertBool2Int($1);
+			convertBool2Int($3);
 			
 			$$ = new expr();
 			$$->type = "NONBOOL";
-
-			$$->loc = gentemp (new symtype("INTEGER"));
-			emit ("BAND", $$->loc->name, $1->loc->name, $3->loc->name);
+			$$->loc = gentemp(new symtype("INTEGER"));
+			emit("BAND", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 exclusive_OR_expression:
 	AND_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|exclusive_OR_expression BITXOR AND_expression 
 	{
-		//same as AND_expression: check compatible types, make non-boolean expression and convert bool to int and emit
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Same as AND_expression: check compatible types, make non-boolean expression and convert bool to int and emit
+		if (typecheck($1->loc, $3->loc)) 
 		{
-			convertBool2Int ($1);
-			convertBool2Int ($3);
+			convertBool2Int($1);
+			convertBool2Int($3);
 			
 			$$ = new expr();
 			$$->type = "NONBOOL";
 
-			$$->loc = gentemp (new symtype("INTEGER"));
-			emit ("XOR", $$->loc->name, $1->loc->name, $3->loc->name);
+			$$->loc = gentemp(new symtype("INTEGER"));
+			emit("XOR", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 inclusive_OR_expression:
 	exclusive_OR_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|inclusive_OR_expression BITOR exclusive_OR_expression 
 	{
-		// same as and_expression: check compatible types, make non-boolean expression and convert bool to int and emit
-		if (typecheck ($1->loc, $3->loc) ) 
+		// Same as and_expression: check compatible types, make non-boolean expression and convert bool to int and emit
+		if (typecheck($1->loc, $3->loc)) 
 		{
 			// If any is bool get its value
-			convertBool2Int ($1);
-			convertBool2Int ($3);
+			convertBool2Int($1);
+			convertBool2Int($3);
 			
 			$$ = new expr();
 			$$->type = "NONBOOL";
 
-			$$->loc = gentemp (new symtype("INTEGER"));
-			emit ("INOR", $$->loc->name, $1->loc->name, $3->loc->name);
+			$$->loc = gentemp(new symtype("INTEGER"));
+			emit("INOR", $$->loc->name, $1->loc->name, $3->loc->name);
 		}
-		// error
-		else cout << "Type Error"<< endl;
+		// Error
+		else cout << "Type Error" << endl;
 	}
 	;
 
 logical_AND_expression:
 	inclusive_OR_expression 
 	{
-		//simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|logical_AND_expression N AND M inclusive_OR_expression 
 	{
-		// involves back-patching
-		// convert int to bool
+		// Involves back-patching
+		// Convert int to bool
 		convertInt2Bool($5);
 
-		// convert $1 to bool and backpatch using N
+		// Convert $1 to bool and backpatch using N
 		backpatch($2->nextlist, nextinstr());
 		convertInt2Bool($1);
 
 		$$ = new expr();
 		$$->type = "BOOL";
 
-		// standard back-patching principles
+		// Standard back-patching principles
 		backpatch($1->truelist, $4);
 		$$->truelist = $5->truelist;
-		$$->falselist = merge ($1->falselist, $5->falselist);
+		$$->falselist = merge($1->falselist, $5->falselist);
 	}
 	;
 
 logical_OR_expression:
 	logical_AND_expression 
 	{
-		// simply equate 
+		// Simply equate 
 		$$=$1;
 	}
 	|logical_OR_expression N OR M logical_AND_expression 
 	{
-		// convert (if) int to bool
+		// Convert (if) int to bool
 		convertInt2Bool($5);
 
-		// convert $1 to bool and backpatch using N
+		// Convert $1 to bool and backpatch using N
 		backpatch($2->nextlist, nextinstr());
 		convertInt2Bool($1);
 
 		$$ = new expr();
 		$$->type = "BOOL";
 
-		// standard back-patching principles involved
-		backpatch ($1->falselist, $4);
-		$$->truelist = merge ($1->truelist, $5->truelist);
+		// Standard back-patching principles involved
+		backpatch($1->falselist, $4);
+		$$->truelist = merge($1->truelist, $5->truelist);
 		$$->falselist = $5->falselist;
 	}
 	;
@@ -845,65 +837,65 @@ M:
 N: 
 	%empty 
 	{ 	
-		// guard against fallthrough by emitting a goto
+		// Guard against fallthrough by emitting a goto
 		$$  = new statement();
 		$$->nextlist = makelist(nextinstr());
-		emit ("GOTOOP","");
+		emit("GOTOOP","");
 	};
 
 conditional_expression:
 	logical_OR_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|logical_OR_expression N QUESTION M expression N COLON M conditional_expression 
 	{
-		// generate temporary for expression
+		// Generate temporary for expression
 		$$->loc = gentemp($5->loc->type);
 		$$->loc->update($5->loc->type);
 		
-		// make it equal to the conditional expression
+		// Make it equal to the conditional expression
 		emit("EQUAL", $$->loc->name, $9->loc->name);
 		list<int> l = makelist(nextinstr());
-		emit ("GOTOOP", "");				// prevent fallthrough
+		emit("GOTOOP", "");				// Prevent fallthrough
 
-		// necessary back-patching 
+		// Necessary back-patching 
 		backpatch($6->nextlist, nextinstr());
 		emit("EQUAL", $$->loc->name, $5->loc->name);
 		list<int> m = makelist(nextinstr());
-		l = merge (l, m);					// merge the next instruction list
-		emit ("GOTOOP", "");				// prevent fallthrough
+		l = merge(l, m);					// Mergethe next instruction list
+		emit("GOTOOP", "");				// Prevent fallthrough
 
-		// necessary back-patching w.r.t logical_OR_expression
+		// Necessary back-patching w.r.t logical_OR_expression
 		backpatch($2->nextlist, nextinstr());
 		convertInt2Bool($1);
-		backpatch ($1->truelist, $4);
-		backpatch ($1->falselist, $8);
-		backpatch (l, nextinstr());
+		backpatch($1->truelist, $4);
+		backpatch($1->falselist, $8);
+		backpatch(l, nextinstr());
 	}
 	;
 
 assignment_expression:
 	conditional_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|unary_expression assignment_operator assignment_expression 
 	{
-		// if type is arr, simply check if we need to convert and emit
+		// If type is arr, simply check if we need to convert and emit
 		if($1->cat=="ARR") 
 		{
 			$3->loc = conv($3->loc, $1->type->type);
 			emit("ARRL", $1->Array->name, $1->loc->name, $3->loc->name);	
 		}
-		// if type is ptr, simply emit
+		// If type is ptr, simply emit
 		else if($1->cat=="PTR") 
 		{
 			emit("PTRL", $1->Array->name, $3->loc->name);	
 		}
-		// otherwise assignment
+		// Otherwise assignment
 		else
 		{
 			$3->loc = conv($3->loc, $1->Array->type->type);
@@ -930,7 +922,7 @@ assignment_operator:
 expression:
 	assignment_expression 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|expression COMMA assignment_expression {}
@@ -966,9 +958,9 @@ init_declarator:
 	declarator {$$=$1;}
 	|declarator ASSIGN initializer 
 	{
-		// get the initial value and emit it
+		// Get the initial value and emitit
 		if ($3->initial_value!="") $1->initial_value=$3->initial_value;
-		emit ("EQUAL", $1->name, $3->name);
+		emit("EQUAL", $1->name, $3->name);
 	}
 	;
 
@@ -1033,8 +1025,8 @@ function_specifier:
 declarator:
 	pointer direct_declarator 
 	{
-		// for multidimensional arrays
-		// move in depth till you get the base type
+		// For multidimensional arrays
+		// Move in depth till you get the base type
 		symtype * t = $1;
 		while (t->ptr !=NULL) t = t->ptr;
 		t->ptr = $2->type;
@@ -1047,13 +1039,13 @@ declarator:
 direct_declarator:
 	IDENTIFIER 
 	{
-		// if identifier, simply add a new variable of var_type
+		// If identifier, simply add a new variable of var_type
 		$$ = $1->update(new symtype(Type));
 		currentSymbol = $$;
 	}
 	| ROBRAOPEN declarator ROBRACLOSE 
 	{
-		// simply equate
+		// Simply equate
 		$$=$2;
 	}
 	| direct_declarator SQBRAOPEN type_qualifier_list assignment_expression SQBRACLOSE {}
@@ -1062,7 +1054,7 @@ direct_declarator:
 	{
 		symtype * t = $1 -> type;
 		symtype * prev = NULL;
-		// keep moving recursively to get basetype
+		// Keep moving recursively to get basetype
 		while (t->type == "ARR") 
 		{
 			prev = t;
@@ -1070,16 +1062,16 @@ direct_declarator:
 		}
 		if (prev==NULL) 
 		{
-			// get initial value
+			// Get initial value
 			int temp = atoi($3->loc->initial_value.c_str());
-			// create new symbol table with that initial value
+			// Create new symbol table with that initial value
 			symtype* s = new symtype("ARR", $1->type, temp);
-			// update the symbol table			
+			// Update the symbol table			
 			$$ = $1->update(s);
 		}
 		else 
 		{
-			// similar arguments as above	
+			// Similar arguments as above	
 			prev->ptr =  new symtype("ARR", t, atoi($3->loc->initial_value.c_str()));
 			$$ = $1->update ($1->type);
 		}
@@ -1088,7 +1080,7 @@ direct_declarator:
 	{
 		symtype * t = $1 -> type;
 		symtype * prev = NULL;
-		// keep moving recursively to get basetype
+		// Keep moving recursively to get basetype
 		while (t->type == "ARR") 
 		{
 			prev = t;
@@ -1096,7 +1088,7 @@ direct_declarator:
 		}
 		if (prev==NULL) 
 		{
-			// no initial value - simply keep zero
+			// No initial value - simply keep zero
 			symtype* s = new symtype("ARR", $1->type, 0);
 			$$ = $1->update(s);
 		}
@@ -1116,7 +1108,7 @@ direct_declarator:
 
 		if ($1->type->type !="VOID") 
 		{
-			// lookup for return value
+			// Lookup for return value
 			sym *s = table->lookup("return");
 			s->update($1->type);		
 		}
@@ -1125,7 +1117,7 @@ direct_declarator:
 		table->parent = globalTable;
 
 		// Come back to globalsymbol table
-		changeTable (globalTable);				
+		changeTable(globalTable);				
 		currentSymbol = $$;
 	}
 	| direct_declarator ROBRAOPEN identifier_list ROBRACLOSE {}
@@ -1133,9 +1125,9 @@ direct_declarator:
 	{
 		table->name = $1->name;
 
-		if ($1->type->type !="VOID") 
+		if ($1->type->type != "VOID") 
 		{
-			// lookup for return value
+			// Lookup for return value
 			sym *s = table->lookup("return");
 			s->update($1->type);		
 		}
@@ -1145,7 +1137,7 @@ direct_declarator:
 		table->parent = globalTable;
 
 		// Come back to globalsymbol table
-		changeTable (globalTable);				
+		changeTable(globalTable);				
 		currentSymbol = $$;
 	}
 	;
@@ -1160,8 +1152,8 @@ CT:
 		// Function symbol table already exists
 		else 
 		{
-			changeTable (currentSymbol ->nested);						
-			emit ("FUNC", table->name);
+			changeTable(currentSymbol ->nested);						
+			emit("FUNC", table->name);
 		}
 	}
 	;
@@ -1170,13 +1162,13 @@ pointer:
 	MUL type_qualifier_list {}
 	|MUL 
 	{
-		// create new pointer
+		// Create new pointer
 		$$ = new symtype("PTR");
 	}
 	|MUL type_qualifier_list pointer {}
 	|MUL pointer 
 	{
-		// create new pointer
+		// Create new pointer
 		$$ = new symtype("PTR", $2);
 	}
 	;
@@ -1216,7 +1208,7 @@ type_name:
 initializer:
 	assignment_expression 
 	{
-		// assignment
+		// Assignment
 		$$ = $1->loc;
 	}
 	|CURBRAOPEN initializer_list CURBRACLOSE {}
@@ -1249,28 +1241,28 @@ statement:
 	labeled_statement {}
 	|compound_statement 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|expression_statement 
 	{
-		// create new statement with same nextlist
+		// Create new statement with same nextlist
 		$$ = new statement();
 		$$->nextlist = $1->nextlist;
 	}
 	|selection_statement 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|iteration_statement 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|jump_statement 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	;
@@ -1278,17 +1270,17 @@ statement:
 labeled_statement:
 	IDENTIFIER COLON statement 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
 	}
 	|CASE constant_expression COLON statement 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
 	}
 	|DEFAULT COLON statement 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
 	}
 	;
@@ -1296,12 +1288,12 @@ labeled_statement:
 compound_statement:
 	CURBRAOPEN block_item_list CURBRACLOSE 
 	{
-		// simply equate
+		// Simply equate
 		$$=$2;
 	}
 	|CURBRAOPEN CURBRACLOSE 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
 	}
 	;
@@ -1309,26 +1301,26 @@ compound_statement:
 block_item_list:
 	block_item 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|block_item_list M block_item 
 	{
-		//after $1, move to block_item via $2
+		// After $1, move to block_item via $2
 		$$=$3;
-		backpatch ($1->nextlist, $2);
+		backpatch($1->nextlist, $2);
 	}
 	;
 
 block_item:
 	declaration 
 	{
-		// new statement
+		// New statement
 		$$ = new statement();
 	}
 	|statement 
 	{
-		// simply equate
+		// Simply equate
 		$$ = $1;
 	}
 	;
@@ -1336,12 +1328,12 @@ block_item:
 expression_statement:
 	expression SEMICOLON 
 	{
-		// simply equate
+		// Simply equate
 		$$=$1;
 	}
 	|SEMICOLON 
 	{
-		// new expression
+		// New expression
 		$$ = new expr();
 	}
 	;
@@ -1349,24 +1341,24 @@ expression_statement:
 selection_statement:
 	IF ROBRAOPEN expression N ROBRACLOSE M statement N %prec THEN
 	{
-		// if stmt without else
-		backpatch ($4->nextlist, nextinstr());				//nextlist of N goes to nextinstr
-		convertInt2Bool($3);							 	//convert expression to bool	
-		$$ = new statement();								//make new statement
-		backpatch ($3->truelist, $6);						//is expression is true, go to M i.e just before statement body
-		list<int> temp = merge ($3->falselist, $7->nextlist); //merge falselist of expression, nextlist of statement and second N
-		$$->nextlist = merge ($8->nextlist, temp);
+		// If stmt without else
+		backpatch($4->nextlist, nextinstr());						// Nextlist of N goes to nextinstr
+		convertInt2Bool($3);							 			// Convert expression to bool	
+		$$ = new statement();										// Make new statement
+		backpatch($3->truelist, $6);								// Is expression is true, go to M i.e just before statement body
+		list<int> temp = merge($3->falselist, $7->nextlist); 		// Mergefalselist of expression, nextlist of statement and second N
+		$$->nextlist = merge($8->nextlist, temp);
 	}
 	|IF ROBRAOPEN expression N ROBRACLOSE M statement N ELSE M statement 
 	{
-		// if stmt with else
-		backpatch ($4->nextlist, nextinstr());					//nextlist of N goes to nextinstr
-		convertInt2Bool($3);									//convert expression to bool
-		$$ = new statement();									//create new statement
-		backpatch ($3->truelist, $6);							//when expression is true, go to M1 else go to M2
-		backpatch ($3->falselist, $10);
-		list<int> temp = merge ($7->nextlist, $8->nextlist);	//merge the nextlists of the statements and second N
-		$$->nextlist = merge ($11->nextlist,temp);
+		// If stmt with else
+		backpatch($4->nextlist, nextinstr());						// Nextlist of N goes to nextinstr
+		convertInt2Bool($3);										// Convert expression to bool
+		$$ = new statement();										// Create new statement
+		backpatch($3->truelist, $6);								// When expression is true, go to M1 else go to M2
+		backpatch($3->falselist, $10);
+		list<int> temp = merge($7->nextlist, $8->nextlist);			// Mergethe nextlists of the statements and second N
+		$$->nextlist = merge($11->nextlist,temp);
 	}
 	|SWITCH ROBRAOPEN expression ROBRACLOSE statement {}
 	;
@@ -1374,9 +1366,9 @@ selection_statement:
 iteration_statement:
 	WHILE M ROBRAOPEN expression ROBRACLOSE M statement 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
-		// convert int expression to bool
+		// Convert int expression to bool
 		convertInt2Bool($4);
 
 		// M1 to go back to boolean again
@@ -1390,33 +1382,33 @@ iteration_statement:
 	    string temp_str = strs.str();
 	    char* intStr = (char*) temp_str.c_str();
 		string str = string(intStr);
-		// Emit to prevent fallthrough
-		emit ("GOTOOP", str);
+		// Emitto prevent fallthrough
+		emit("GOTOOP", str);
 	}
 	|DO M statement M WHILE ROBRAOPEN expression ROBRACLOSE SEMICOLON 
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
-		// convert int expression to bool
+		// Convert int expression to bool
 		convertInt2Bool($7);
 		// M1 to go back to statement if expression is true
 		// M2 to go to check expression if statement is complete
-		backpatch ($7->truelist, $2);
-		backpatch ($3->nextlist, $4);
+		backpatch($7->truelist, $2);
+		backpatch($3->nextlist, $4);
 
 		// Some bug in the next statement
 		$$->nextlist = $7->falselist;
 	}
 	|FOR ROBRAOPEN expression_statement M expression_statement ROBRACLOSE M statement
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
-		// convert int expression to bool
+		// Convert int expression to bool
 		convertInt2Bool($5);
 
-		// standard back-patching principles
-		backpatch ($5->truelist, $7);
-		backpatch ($8->nextlist, $4);
+		// Standard back-patching principles
+		backpatch($5->truelist, $7);
+		backpatch($8->nextlist, $4);
 
 		stringstream strs;
 	    strs << $4;
@@ -1424,21 +1416,21 @@ iteration_statement:
 	    char* intStr = (char*) temp_str.c_str();
 		string str = string(intStr);
 
-		// prevent fallthrough
-		emit ("GOTOOP", str);
+		// Prevent fallthrough
+		emit("GOTOOP", str);
 		$$->nextlist = $5->falselist;
 	}
 	|FOR ROBRAOPEN expression_statement M expression_statement M expression N ROBRACLOSE M statement
 	{
-		// create new statement
+		// Create new statement
 		$$ = new statement();
-		// convert int expression_statement to bool
+		// Convert int expression_statement to bool
 		convertInt2Bool($5);
 
-		// simple back-patching principles
-		backpatch ($5->truelist, $10);
-		backpatch ($8->nextlist, $4);
-		backpatch ($11->nextlist, $6);
+		// Simple back-patching principles
+		backpatch($5->truelist, $10);
+		backpatch($8->nextlist, $4);
+		backpatch($11->nextlist, $6);
 
 		stringstream strs;
 	    strs << $6;
@@ -1446,8 +1438,8 @@ iteration_statement:
 	    char* intStr = (char*) temp_str.c_str();
 		string str = string(intStr);
 
-		// prevent fallthrough
-		emit ("GOTOOP", str);
+		// Prevent fallthrough
+		emit("GOTOOP", str);
 		$$->nextlist = $5->falselist;
 	}
 	;
@@ -1458,13 +1450,13 @@ jump_statement:
 	|BREAK SEMICOLON {$$ = new statement();}
 	|RETURN expression SEMICOLON 
 	{
-		// emit return with the name of the return value
+		// Emitreturn with the name of the return value
 		$$ = new statement();
 		emit("RETURN",$2->loc->name);
 	}
 	|RETURN SEMICOLON
 	{
-		// simply emit return
+		// Simply emitreturn
 		$$ = new statement();
 		emit("RETURN","");
 	}
@@ -1484,10 +1476,10 @@ function_definition:
 	declaration_specifiers declarator declaration_list CT compound_statement {}
 	|declaration_specifiers declarator CT compound_statement 
 	{
-		emit ("FUNCEND", table->name);
+		emit("FUNCEND", table->name);
 		table->parent = globalTable;
-		// once we come back to this at the end, change the table to global Symbol table
-		changeTable (globalTable);
+		// Once we come back to this at the end, change the table to global Symbol table
+		changeTable(globalTable);
 	}
 	;
 

@@ -1,3 +1,8 @@
+/**
+* Authors  : Yashica Patodia (19CS10067)
+*            Shashvat Gupta (19CS30042) 
+* Desc     : File to generate target code
+*/
 #include "ass6_19CS10067_19CS30042_translator.h"
 #include <iostream>
 #include <cstring>
@@ -9,30 +14,30 @@ extern vector<string> allstrings;
 using namespace std;
 
 int labelCount=0;							// Label count in asm file
-std::map<int, int> labelMap;				// map from quad number to label number
-ofstream out;								// asm file stream
-vector <quad> Array;						// quad Array
-string asmfilename="ass6_19CS10067_19CS30042_";		// asm file name
-string inputfile="ass6_19CS10067_19CS30042_test";		// input file name
+std::map<int, int> labelMap;				// Map from quad number to label number
+ofstream out;								// Asm file stream
+vector <quad> Array;						// Quad Array
+string asmfilename="ass6_19CS10067_19CS30042_";		// Asm file name
+string inputfile="ass6_19CS10067_19CS30042_test";		// Input file name
 
-// prepares the activation table for a given symtable 
+// Prepares the activation table for a given symtable 
 void computeActivationRecord(symtable* st) {
 	int param = -20;
 	int local = -24;
 
-	// iterate over the symtable
+	// Iterate over the symtable
 	for (list <sym>::iterator it = st->table.begin(); it!=st->table.end(); it++) {
-		// if param
+		// If param
 		if (it->category =="param") {
-			st->ar [it->name] = param;			// assign it to be param in activation record
-			param +=it->size;					// add the size of the entry	
+			st->ar [it->name] = param;			// Assign it to be param in activation record
+			param +=it->size;					// Add the size of the entry	
 		}
 		else if (it->name=="return") continue;	
 
-		// if local
+		// If local
 		else {
-			st->ar [it->name] = local;			// assign it to be param in activation record
-			local -=it->size;					// add the size of the entry
+			st->ar [it->name] = local;			// Assign it to be param in activation record
+			local -=it->size;					// Add the size of the entry
 		}
 	}
 }
@@ -40,35 +45,35 @@ void computeActivationRecord(symtable* st) {
 void genasm() {
 	Array = q.Array;
 
-	//To update the goto labels
-	// iterate over Array
+	// O update the goto labels
+	// Iterate over Array
 	for (vector<quad>::iterator it = Array.begin(); it!=Array.end(); it++) {
 	int i;
 	if (it->op=="GOTOOP" || it->op=="LT" || it->op=="GT" || it->op=="LE" || it->op=="GE" || it->op=="EQOP" || it->op=="NEOP") {
-		i = atoi(it->result.c_str());			// convert the result in string to integer
+		i = atoi(it->result.c_str());			// Convert the result in string to integer
 		labelMap [i] = 1;
 	}
 	}
 	int count = 0;
-	// map from quad number to label number
+	// Map from quad number to label number
 	for (std::map<int,int>::iterator it=labelMap.begin(); it!=labelMap.end(); ++it)
 		it->second = count++;
 	list<symtable*> tablelist;
-	// flatten the global symbol table
+	// Flatten the global symbol table
 	for (list <sym>::iterator it = globalTable->table.begin(); it!=globalTable->table.end(); it++) {
 		if (it->nested!=NULL) tablelist.push_back (it->nested);
 	}
-	// compute activation record for all (nested) the symbol table
+	// Compute activation record for all (nested) the symbol table
 	for (list<symtable*>::iterator iterator = tablelist.begin(); 
 		iterator != tablelist.end(); ++iterator) {
 		computeActivationRecord(*iterator);
 	}
 
-	//assembly file -> sfile (.s)
+	// Assembly file -> sfile (.s)
 	ofstream sfile;
 	sfile.open(asmfilename.c_str());
 
-	// begin the .s file 
+	// Begin the .s file 
 	sfile << "\t.file	\"test.c\"\n";
 	for (list <sym>::iterator it = table->table.begin(); it!=table->table.end(); it++) {
 		if (it->category!="function") {
@@ -111,7 +116,7 @@ void genasm() {
 		}	
 	}
 
-	// begin the text segment
+	// Begin the text segment
 	sfile << "\t.text	\n";
 
 	vector<string> params;
@@ -127,7 +132,7 @@ void genasm() {
 		string arg2 = it->arg2;
 		string s=arg2;
 
-		// if param -> add to the param list
+		// If param -> add to the param list
 		if(op=="PARAM"){
 			params.push_back(result);
 		}
@@ -135,7 +140,7 @@ void genasm() {
 			sfile << "\t";
 
 			// Binary Operations
-			// addition operation
+			// Addition operation
 			if (op=="ADD") {
 				bool flag=true;
 				if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) flag=false ;
@@ -155,14 +160,14 @@ void genasm() {
 					sfile << "\tmovl \t%eax, " << table->ar[result] << "(%rbp)";
 				}
 			}
-			// subtract operation
+			// Subtract operation
 			else if (op=="SUB") {
 				sfile << "movl \t" << table->ar[arg1] << "(%rbp), " << "%eax" << endl;
 				sfile << "\tmovl \t" << table->ar[arg2] << "(%rbp), " << "%edx" << endl;
 				sfile << "\tsubl \t%edx, %eax\n";
 				sfile << "\tmovl \t%eax, " << table->ar[result] << "(%rbp)";
 			}
-			// multiplcation operator
+			// Multiplcation operator
 			else if (op=="MULT") {
 				sfile << "movl \t" << table->ar[arg1] << "(%rbp), " << "%eax" << endl;
 				bool flag=true;
@@ -185,7 +190,7 @@ void genasm() {
 				else sfile << "\timull \t" << table->ar[arg2] << "(%rbp), " << "%eax" << endl;
 				sfile << "\tmovl \t%eax, " << table->ar[result] << "(%rbp)";			
 			}
-			// divide operation
+			// Divide operation
 			else if(op=="DIVIDE") {
 				sfile << "movl \t" << table->ar[arg1] << "(%rbp), " << "%eax" << endl;
 				sfile << "\tcltd" << endl;
@@ -193,16 +198,16 @@ void genasm() {
 				sfile << "\tmovl \t%eax, " << table->ar[result] << "(%rbp)";		
 			}
 
-			// Bit Operators /* Ignored */
+			// Bit Operators 
 			else if (op=="MODOP")		sfile << result << " = " << arg1 << " % " << arg2;
 			else if (op=="XOR")			sfile << result << " = " << arg1 << " ^ " << arg2;
 			else if (op=="INOR")		sfile << result << " = " << arg1 << " | " << arg2;
 			else if (op=="BAND")		sfile << result << " = " << arg1 << " & " << arg2;
-			// Shift Operations /* Ignored */
+			// Shift Operations 
 			else if (op=="LEFTOP")		sfile << result << " = " << arg1 << " << " << arg2;
 			else if (op=="RIGHTOP")		sfile << result << " = " << arg1 << " >> " << arg2;
 
-			// copy
+			// Copy
 			else if (op=="EQUAL")	{
 				s=arg1;
 				bool flag=true;
@@ -301,34 +306,34 @@ void genasm() {
 				params.push_back(result);
 			}
 
-			// call a function
+			// Call a function
 			else if (op=="CALL") {
 				// Function Table
 				symtable* t = globalTable->lookup(arg1)->nested;
-				int i,j=0;	// index
+				int i,j=0;	// Index
 				for (list <sym>::iterator it = t->table.begin(); it!=t->table.end(); it++) {
 					i = distance ( t->table.begin(), it);
 					if (it->category== "param") {
 						if(j==0) {
-							// the first parameter to the function
+							// The first parameter to the function
 							sfile << "movl \t" << table->ar[params[i]] << "(%rbp), " << "%eax" << endl;
 							sfile << "\tmovq \t" << table->ar[params[i]] << "(%rbp), " << "%rdi" << endl;
 							j++;
 						}
 						else if(j==1) {
-							// the second parameter to the function
+							// The second parameter to the function
 							sfile << "movl \t" << table->ar[params[i]] << "(%rbp), " << "%eax" << endl;
 							sfile << "\tmovq \t" << table->ar[params[i]] << "(%rbp), " << "%rsi" << endl;
 							j++;
 						}
 						else if(j==2) {
-							// the third parameter to the function
+							// The third parameter to the function
 							sfile << "movl \t" << table->ar[params[i]] << "(%rbp), " << "%eax" << endl;
 							sfile << "\tmovq \t" << table->ar[params[i]] << "(%rbp), " << "%rdx" << endl;
 							j++;
 						}
 						else if(j==3) {
-							// the fourth parameter to the function
+							// The fourth parameter to the function
 							sfile << "movl \t" << table->ar[params[i]] << "(%rbp), " << "%eax" << endl;
 							sfile << "\tmovq \t" << table->ar[params[i]] << "(%rbp), " << "%rcx" << endl;
 							j++;
@@ -345,7 +350,7 @@ void genasm() {
 			}
 
 			else if (op=="FUNC") {
-				// prologue of a function
+				// Prologue of a function
 				sfile <<".globl\t" << result << "\n";
 				sfile << "\t.type\t"	<< result << ", @function\n";
 				sfile << result << ": \n";
@@ -385,8 +390,8 @@ void genasm() {
 				}
 			}
 				
-			// epilogue of a function
-			// function ends	
+			// Epilogue of a function
+			// Function ends	
 			else if (op=="FUNCEND") {
 				sfile << "leave\n";
 				sfile << "\t.cfi_restore 5\n";
@@ -400,8 +405,8 @@ void genasm() {
 			sfile << endl;
 		}
 	}
-	// footnote
-	sfile << 	"\t.ident\t	\"Compiled by 18CS10069\"\n";
+	// Footnote
+	sfile << 	"\t.ident\t	\"Compiled by 19CS30042 and 19CS10067\"\n";
 	sfile << 	"\t.section\t.note.GNU-stack,\"\",@progbits\n";
 	sfile.close();
 }
